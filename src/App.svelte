@@ -1,8 +1,28 @@
 <script>
+  import { onMount } from "svelte";
   import "https://cdn.marmot-cloud.com/npm/hylid-bridge/2.10.0/index.js";
 
   let authCode = $state("");
   let token = $state("");
+  let scannedCode = $state("");
+  let secondsOnPage = $state(0);
+
+  // Start timer when component mounts
+  onMount(() => {
+    const interval = setInterval(() => {
+      secondsOnPage++;
+    }, 1000);
+
+    return () => clearInterval(interval);
+  });
+
+  // Format seconds into HH:MM:SS
+  function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  }
 
   function auth() {
     console.log("Auth button clicked"); // Debug log
@@ -121,6 +141,7 @@
       type: "qr",
       success: (res) => {
         console.log("QR code scanned:", res.code);
+        scannedCode = res.code; // Save the scanned code
         my.alert({
           title: "Scanned Code",
           content: res.code,
@@ -137,6 +158,19 @@
   }
 </script>
 
+<div class="header">
+  <div class="info-item">
+    <span class="label">Scanned Code:</span>
+    <span class="value {scannedCode ? '' : 'placeholder'}"
+      >{scannedCode || "Scan a QR code to see it here"}</span
+    >
+  </div>
+  <div class="info-item">
+    <span class="label">Time on Page:</span>
+    <span class="value">{formatTime(secondsOnPage)}</span>
+  </div>
+</div>
+
 <main>
   <div class="button-container">
     <button class="btn btn-auth" onclick={auth}> Auth </button>
@@ -151,6 +185,46 @@
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, sans-serif;
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #1a1a1a;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .value {
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 600;
+    font-family: "Courier New", monospace;
+  }
+
+  .value.placeholder {
+    color: #666;
+    font-style: italic;
+    font-weight: 400;
   }
 
   main {
