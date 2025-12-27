@@ -1,5 +1,4 @@
 <script>
-  import "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
   import "https://cdn.marmot-cloud.com/npm/hylid-bridge/2.10.0/index.js";
 
   let authCode = $state("");
@@ -138,19 +137,82 @@
   }
 </script>
 
-<main class="min-h-screen bg-black flex items-center justify-center">
-  <div class="flex flex-col gap-4">
-    <button
-      class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold transition shadow-lg"
-      onclick={auth}
-    >
-      Auth
-    </button>
-    <button
-      class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-semibold transition shadow-lg"
-      onclick={scan}
-    >
-      Scan QR Code
-    </button>
+<main>
+  <div class="button-container">
+    <button class="btn btn-auth" onclick={auth}> Auth </button>
+    <button class="btn btn-scan" onclick={scan}> Scan QR Code </button>
+    <button class="btn btn-pay" onclick={pay}> Pay </button>
   </div>
 </main>
+
+<style>
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, sans-serif;
+  }
+
+  main {
+    min-height: 100vh;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn {
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  .btn-auth {
+    background-color: #3b82f6;
+  }
+
+  .btn-auth:hover {
+    background-color: #2563eb;
+  }
+
+  .btn-scan {
+    background-color: #10b981;
+  }
+
+  .btn-scan:hover {
+    background-color: #059669;
+  }
+
+  .btn-pay {
+    background-color: #8b5cf6;
+  }
+
+  .btn-pay:hover {
+    background-color: #7c3aed;
+  }
+</style>
